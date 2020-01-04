@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class MeetingViewModel extends ViewModel {
     private MeetingRepository mRepository;
     private HashMap<String, LiveData<List<MeetingInfo>>> mMeetingsList;
+    private MutableLiveData<List<MeetingInfo>> currentMeetingInfo;
     private String mForDate;
 
     public MeetingViewModel(String date, MeetingRepository repository) {
@@ -24,13 +26,20 @@ public class MeetingViewModel extends ViewModel {
         return mForDate;
     }
 
-    public LiveData<List<MeetingInfo>> getMeetings(String forDate) {
-
+    public void getMeetings(String forDate) {
         mForDate = forDate;
-        if (mMeetingsList == null || mMeetingsList.get(forDate).getValue() == null) {
+        if (mMeetingsList == null || mMeetingsList.get(forDate) == null) {
             loadMeeting(forDate);
         }
-        return mMeetingsList.get(forDate);
+        currentMeetingInfo.setValue(mMeetingsList.get(forDate).getValue());
+    }
+
+    public LiveData<List<MeetingInfo>> getCurrentMeetingInfo(){
+        if (currentMeetingInfo == null){
+            currentMeetingInfo = new MutableLiveData<>();
+            getMeetings(mForDate);
+        }
+        return currentMeetingInfo;
     }
 
     private void loadMeeting(String forDate) {
