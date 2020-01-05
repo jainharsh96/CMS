@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -15,8 +16,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
+            android:drawableStart="@drawable/ic_chevron_left_black_24dp"
+            android:gravity="left|center"
             android:onClick="onClickPrevious"
-            android:text="previous" />
+            android:text="previous"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/date"
@@ -24,16 +29,22 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="today" />
+            android:text="today"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+            android:gravity="right|center"
             android:onClick="onClickNext"
-            android:text="next" />
+            android:text="next"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -41,12 +52,13 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <View style="@style/horizontalLineLight" />
+
     <Button
         android:id="@+id/button"
+        style="@style/buttonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Schedule company meeting"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:onClick="onClickScheduleMeeting"
+        android:text="Schedule company meeting" />
 </LinearLayout>

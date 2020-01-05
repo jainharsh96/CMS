@@ -7,12 +7,14 @@ import com.example.cms.ui.adapters.MeetingAdapter;
 import com.example.cms.util.DateConverter;
 import com.example.cms.util.MeetingUtil;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class MeetingActivity extends AppCompatActivity {
+
+    public static final int REQUEST_CODE_SCHEDULE_MEETING_ACTIVITY = 100;
+    public static final int RESULT_OK = 101;
 
     private MeetingAdapter mMeetingAdapter;
     private MeetingViewModel mMeetingViewModel;
@@ -85,5 +90,18 @@ public class MeetingActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("error", "onDestroy: ");
+    }
+
+    public void onClickScheduleMeeting(View view) {
+        Intent intent = new Intent(this, ScheduleMeetingActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SCHEDULE_MEETING_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SCHEDULE_MEETING_ACTIVITY && resultCode == RESULT_OK) {
+            mMeetingViewModel.getMeetings(mForDate);
+        }
     }
 }

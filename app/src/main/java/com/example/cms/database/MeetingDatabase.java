@@ -18,7 +18,7 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
 @Database(entities = {MeetingInfo.class}, version = 1, exportSchema = false)
-@TypeConverters({DateConverter.class, ArrayListConverter.class})
+@TypeConverters({ArrayListConverter.class})
 public abstract class MeetingDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
     private static final String DATABASE_NAME = "MeetingDatabase";

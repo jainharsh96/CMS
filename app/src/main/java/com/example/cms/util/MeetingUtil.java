@@ -11,7 +11,7 @@ public class MeetingUtil {
 
     public static void addDateInMeetingList(List<MeetingInfo> infoList, String date) {
         for (MeetingInfo info : infoList) {
-            info.setMeetingDate(DateConverter.stringToDate(date));
+            info.setMeetingDate(date);
         }
     }
 

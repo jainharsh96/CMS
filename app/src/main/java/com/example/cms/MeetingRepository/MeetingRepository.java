@@ -42,7 +42,8 @@ public class MeetingRepository {
 
     public LiveData<List<MeetingInfo>> getMeetings(String forDate) {
         LiveData<List<MeetingInfo>> meetingInfo =
-                mMeetingDao.getScheduledMeeting(DateConverter.stringToDate(forDate));
+                mMeetingDao.getScheduledMeeting(forDate);
+       // int x = mMeetingDao.getRow();
         if(meetingInfo.getValue() == null){
             meetingInfo = getMeetingFromApi(forDate);
         }

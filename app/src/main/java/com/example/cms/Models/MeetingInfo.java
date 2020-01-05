@@ -25,14 +25,13 @@ public class MeetingInfo {
     private String description;
     @SerializedName("participants")
     private ArrayList<String> participants = null;
-    @ColumnInfo(name = "meetingDate")
-    private Date meetingDate;
+    private String meetingDate;
 
-    public Date getMeetingDate() {
+    public String getMeetingDate() {
         return meetingDate;
     }
 
-    public void setMeetingDate(Date meetingDate) {
+    public void setMeetingDate(String meetingDate) {
         this.meetingDate = meetingDate;
     }
 

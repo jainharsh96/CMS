@@ -24,7 +24,10 @@ public interface MeetingDao {
     @Delete
     void deleteMeeting(MeetingInfo meetingInfo);
 
-    @Query("SELECT * FROM MEETINGINFO WHERE meetingDate = :forDate ORDER BY startTime ASC")
-    LiveData<List<MeetingInfo>> getScheduledMeeting(Date forDate);
+    @Query("SELECT COUNT(*) FROM meetingInfo")
+    int getRow();
+
+    @Query("SELECT * FROM meetingInfo WHERE meetingDate = :forDate ORDER BY startTime ASC")
+    LiveData<List<MeetingInfo>> getScheduledMeeting(String  forDate);
 
 }
