@@ -1,5 +1,6 @@
 package com.example.cms.database;
 
+import com.example.cms.Models.Eligibility;
 import com.example.cms.Models.MeetingInfo;
 
 import java.util.ArrayList;
@@ -25,15 +26,16 @@ public interface MeetingDao {
     @Delete
     void deleteMeeting(MeetingInfo meetingInfo);
 
-    @Query("SELECT COUNT(*) FROM meetingInfo")
-    int getRow();
+    @Query("SELECT (endTime < :scheduledStartTime OR startTime > :scheduledEndTime ) as "
+            + "eligible FROM meetingInfo WHERE meetingDate = :forDate AND eligible = 0")
+    List<Eligibility> isMeetingSchedulable(String scheduledStartTime, String scheduledEndTime,
+            String forDate);
 
     @Query
             ("SELECT * FROM meetingInfo WHERE "
                     + "meetingDate = "
                     + ":forDate ORDER BY "
-                    + "startTime "
-                    + "ASC")
+                    + "cast ( startTime as INTEGER)")
     List<MeetingInfo> getScheduledMeeting(String forDate);
 
 }
