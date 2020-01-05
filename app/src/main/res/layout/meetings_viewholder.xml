@@ -7,7 +7,7 @@
     android:paddingTop="8dp">
 
     <TextView
-        android:id="@+id/scheduledTime"
+        android:id="@+id/startTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
@@ -19,6 +19,7 @@
     <View
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginTop="4dp"
         style="@style/horizontalLineLight" />
 
     <TextView

@@ -1,6 +1,6 @@
 package com.example.cms.ui;
 
-import com.example.cms.MeetingRepository.MeetingRepository;
+import com.example.cms.Repositorys.MeetingRepository;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

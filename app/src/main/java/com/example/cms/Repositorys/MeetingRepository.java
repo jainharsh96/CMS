@@ -1,17 +1,15 @@
-package com.example.cms.MeetingRepository;
+package com.example.cms.Repositorys;
 
 import com.example.cms.Models.MeetingInfo;
 import com.example.cms.database.MeetingDao;
 import com.example.cms.database.MeetingDatabase;
 import com.example.cms.newtworkutils.MeetingApiClient;
 import com.example.cms.newtworkutils.MeetingApiService;
-import com.example.cms.util.DateConverter;
 import com.example.cms.util.MeetingUtil;
 
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,10 +21,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MeetingRepository {
-    private LiveData<ArrayList<MeetingInfo>> mMeetings;
     private static MeetingRepository mRepository;
     private MeetingDao mMeetingDao;
-    private ExecutorService mIoExecutor;
 
     public static MeetingRepository getInstance(Context context){
         if(mRepository == null){
@@ -50,8 +46,13 @@ public class MeetingRepository {
         return meetingInfo;
     }
 
-    public void addMeeting(MeetingInfo meetingInfo) {
-
+    public void addMeeting(final MeetingInfo meetingInfo) {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                mMeetingDao.scheduleMeeting(meetingInfo);
+            }
+        });
     }
 
     private LiveData<List<MeetingInfo>> getMeetingFromApi(final String forDate){

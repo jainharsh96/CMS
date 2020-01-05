@@ -34,6 +34,17 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.Meetings
         notifyDataSetChanged();
     }
 
+    private String getAttendeeString(ArrayList<String> list) {
+        if (list == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            builder.append(list.get(i) + ", ");
+        }
+        return builder.toString();
+    }
+
     @NonNull
     @Override
     public MeetingsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,7 +58,16 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.Meetings
         String scheduledTime =
                 mMeetings.get(position).getStartTime() + " - " + mMeetings.get(position)
                         .getEndTime();
-        holder.mScheduledTimeView.setText(scheduledTime);
+        if (holder.mEndTimeView == null) {
+            holder.mStartTimeView.setText(scheduledTime);
+        } else {
+            holder.mStartTimeView.setText(mMeetings.get(position).getStartTime());
+            holder.mEndTimeView.setText(mMeetings.get(position).getEndTime());
+        }
+        if (holder.mAttendeeView != null) {
+            holder.mAttendeeView
+                    .setText(getAttendeeString(mMeetings.get(position).getParticipants()));
+        }
         holder.mDescriptionView.setText(mMeetings.get(position).getDescription());
     }
 
@@ -61,13 +81,17 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.Meetings
     }
 
     class MeetingsViewHolder extends RecyclerView.ViewHolder {
-        private TextView mScheduledTimeView;
+        private TextView mStartTimeView;
+        private TextView mEndTimeView;
+        private TextView mAttendeeView;
         private TextView mDescriptionView;
 
         public MeetingsViewHolder(@NonNull View itemView) {
             super(itemView);
-            mScheduledTimeView = itemView.findViewById(R.id.scheduledTime);
+            mStartTimeView = itemView.findViewById(R.id.startTime);
+            mEndTimeView = itemView.findViewById(R.id.endTime);
             mDescriptionView = itemView.findViewById(R.id.description);
+            mAttendeeView = itemView.findViewById(R.id.attendee);
         }
     }
 }

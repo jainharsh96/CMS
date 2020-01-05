@@ -1,6 +1,6 @@
 package com.example.cms.ui;
 
-import com.example.cms.MeetingRepository.MeetingRepository;
+import com.example.cms.Repositorys.MeetingRepository;
 import com.example.cms.Models.MeetingInfo;
 import com.example.cms.R;
 import com.example.cms.ui.adapters.MeetingAdapter;

@@ -20,6 +20,12 @@
         <item name="android:background">@color/colorLightGray</item>
     </style>
 
+    <style name="verticalLineLight">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/colorLightGray</item>
+    </style>
+
     <style name="fieldBackground">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
