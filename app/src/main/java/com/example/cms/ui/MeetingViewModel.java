@@ -2,6 +2,7 @@ package com.example.cms.ui;
 
 import com.example.cms.Repositorys.MeetingRepository;
 import com.example.cms.Models.MeetingInfo;
+import com.example.cms.database.MeetingDao;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +28,8 @@ public class MeetingViewModel extends ViewModel {
 
     public void getMeetingsFromViewModel(String forDate) {
         mForDate = forDate;
-        currentMeetingInfo.setValue(null);
         if (mMeetingsList == null || mMeetingsList.get(forDate) == null) {
+            currentMeetingInfo.setValue(null);
             getMeetingFromRepository(forDate);
         } else {
         currentMeetingInfo.setValue(mMeetingsList.get(forDate));
@@ -52,7 +53,7 @@ public class MeetingViewModel extends ViewModel {
             mMeetingsList.put(forDate, meetingInfos);
             currentMeetingInfo.setValue(mMeetingsList.get(forDate));
         } else {
-            mRepository.getMeetingFromServer(forDate);
+            mRepository.getMeetingFromServer(forDate, currentMeetingInfo);
         }
     }
 

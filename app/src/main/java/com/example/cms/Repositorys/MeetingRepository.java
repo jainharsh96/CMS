@@ -23,6 +23,7 @@ import retrofit2.Response;
 public class MeetingRepository {
     private static MeetingRepository mRepository;
     private MeetingDao mMeetingDao;
+    private MutableLiveData<List<MeetingInfo>> mObservableData;
 
     public static MeetingRepository getInstance(Context context) {
         if (mRepository == null) {
@@ -59,7 +60,9 @@ public class MeetingRepository {
         return mMeetingDao.getScheduledMeeting(forDate);
     }
 
-    public void getMeetingFromServer(final String forDate) {
+    public void getMeetingFromServer(final String forDate,
+            MutableLiveData<List<MeetingInfo>> data) {
+        mObservableData = data;
         MeetingApiService service = MeetingApiClient.getData().create(MeetingApiService.class);
         Call<List<MeetingInfo>> call = service.getScheduledMeeting(forDate);
         call.enqueue(new Callback<List<MeetingInfo>>() {
@@ -67,6 +70,7 @@ public class MeetingRepository {
             public void onResponse(Call<List<MeetingInfo>> call,
                     Response<List<MeetingInfo>> response) {
                 if (response.body() != null) {
+                    mObservableData.setValue(response.body());
                     MeetingUtil.addDateInMeetingList(response.body(), forDate);
                     addMeetings(response.body());
                 }
@@ -80,7 +84,7 @@ public class MeetingRepository {
     }
 
     public void updateMeetingDataBaseFromServer() {
-        // update database in some situation by date or without date
+        // update database in some situation with date or without date
     }
 
 }
