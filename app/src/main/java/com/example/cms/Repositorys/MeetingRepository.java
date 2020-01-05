@@ -24,8 +24,8 @@ public class MeetingRepository {
     private static MeetingRepository mRepository;
     private MeetingDao mMeetingDao;
 
-    public static MeetingRepository getInstance(Context context){
-        if(mRepository == null){
+    public static MeetingRepository getInstance(Context context) {
+        if (mRepository == null) {
             MeetingDatabase meetingDatabase = MeetingDatabase.getInstance(context);
             mRepository = new MeetingRepository(meetingDatabase.meetingDao());
         }
@@ -36,27 +36,30 @@ public class MeetingRepository {
         mMeetingDao = meetingDao;
     }
 
-    public LiveData<List<MeetingInfo>> getMeetings(String forDate) {
-        LiveData<List<MeetingInfo>> meetingInfo =
-                mMeetingDao.getScheduledMeeting(forDate);
-       // int x = mMeetingDao.getRow();
-        if(meetingInfo.getValue() == null){
-            meetingInfo = getMeetingFromApi(forDate);
-        }
-        return meetingInfo;
-    }
-
     public void addMeeting(final MeetingInfo meetingInfo) {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 mMeetingDao.scheduleMeeting(meetingInfo);
+
             }
         });
     }
 
-    private LiveData<List<MeetingInfo>> getMeetingFromApi(final String forDate){
-        final MutableLiveData<List<MeetingInfo>> meetingInfo = new MutableLiveData<>();
+    private void addMeetings(final List<MeetingInfo> infoList) {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                mMeetingDao.addMeetings(infoList);
+            }
+        });
+    }
+
+    public List<MeetingInfo> getMeetingsFromDatabase(String forDate) {
+        return mMeetingDao.getScheduledMeeting(forDate);
+    }
+
+    public void getMeetingFromServer(final String forDate) {
         MeetingApiService service = MeetingApiClient.getData().create(MeetingApiService.class);
         Call<List<MeetingInfo>> call = service.getScheduledMeeting(forDate);
         call.enqueue(new Callback<List<MeetingInfo>>() {
@@ -64,27 +67,20 @@ public class MeetingRepository {
             public void onResponse(Call<List<MeetingInfo>> call,
                     Response<List<MeetingInfo>> response) {
                 if (response.body() != null) {
-                    meetingInfo.setValue(response.body());
-                    MeetingUtil.addDateInMeetingList(meetingInfo.getValue(), forDate);
-                    insertData(meetingInfo.getValue());
+                    MeetingUtil.addDateInMeetingList(response.body(), forDate);
+                    addMeetings(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<List<MeetingInfo>> call, Throwable t) {
-                meetingInfo.setValue(null);
+                //meetingInfo.setValue(null);
             }
         });
-        return meetingInfo;
     }
 
-    private void insertData(final List<MeetingInfo> infoList){
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                mMeetingDao.addMeetings(infoList);
-            }
-        });
+    public void updateMeetingDataBaseFromServer() {
+        // update database in some situation by date or without date
     }
 
 }

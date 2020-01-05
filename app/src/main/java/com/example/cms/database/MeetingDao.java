@@ -12,6 +12,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RoomWarnings;
 
 @Dao
 public interface MeetingDao {
@@ -27,7 +28,12 @@ public interface MeetingDao {
     @Query("SELECT COUNT(*) FROM meetingInfo")
     int getRow();
 
-    @Query("SELECT * FROM meetingInfo WHERE meetingDate = :forDate ORDER BY startTime ASC")
-    LiveData<List<MeetingInfo>> getScheduledMeeting(String  forDate);
+    @Query
+            ("SELECT * FROM meetingInfo WHERE "
+                    + "meetingDate = "
+                    + ":forDate ORDER BY "
+                    + "startTime "
+                    + "ASC")
+    List<MeetingInfo> getScheduledMeeting(String forDate);
 
 }

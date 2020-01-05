@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel;
 
 public class MeetingViewModel extends ViewModel {
     private MeetingRepository mRepository;
-    private HashMap<String, LiveData<List<MeetingInfo>>> mMeetingsList;
+    private HashMap<String, List<MeetingInfo>> mMeetingsList;
     private MutableLiveData<List<MeetingInfo>> currentMeetingInfo;
     private String mForDate;
 
@@ -25,27 +25,35 @@ public class MeetingViewModel extends ViewModel {
         return mForDate;
     }
 
-    public void getMeetings(String forDate) {
+    public void getMeetingsFromViewModel(String forDate) {
         mForDate = forDate;
+        currentMeetingInfo.setValue(null);
         if (mMeetingsList == null || mMeetingsList.get(forDate) == null) {
-            loadMeeting(forDate);
+            getMeetingFromRepository(forDate);
+        } else {
+        currentMeetingInfo.setValue(mMeetingsList.get(forDate));
         }
-        currentMeetingInfo.setValue(mMeetingsList.get(forDate).getValue());
     }
 
     public LiveData<List<MeetingInfo>> getCurrentMeetingInfo(){
         if (currentMeetingInfo == null){
             currentMeetingInfo = new MutableLiveData<>();
-            getMeetings(mForDate);
+            getMeetingsFromViewModel(mForDate);
         }
         return currentMeetingInfo;
     }
 
-    private void loadMeeting(String forDate) {
+    public void getMeetingFromRepository(String forDate) {
         if (mMeetingsList == null) {
             mMeetingsList = new HashMap<>();
         }
-        mMeetingsList.put(forDate, mRepository.getMeetings(forDate));
+        List<MeetingInfo> meetingInfos = mRepository.getMeetingsFromDatabase(forDate);
+        if(meetingInfos != null && meetingInfos.size() > 0 ) {
+            mMeetingsList.put(forDate, meetingInfos);
+            currentMeetingInfo.setValue(mMeetingsList.get(forDate));
+        } else {
+            mRepository.getMeetingFromServer(forDate);
+        }
     }
 
 }

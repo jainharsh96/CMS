@@ -28,7 +28,8 @@ import java.util.Locale;
 public class MeetingActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_SCHEDULE_MEETING_ACTIVITY = 100;
-    public static final int RESULT_OK = 101;
+    public static final int RESULT_MEETING_ADDED = 101;
+    public static final String KEY_MEETING_FOR_DATE = "meeting_for_date";
 
     private MeetingAdapter mMeetingAdapter;
     private MeetingViewModel mMeetingViewModel;
@@ -70,13 +71,13 @@ public class MeetingActivity extends AppCompatActivity {
 
     public void onClickPrevious(View view) {
         mForDate = DateConverter.previousDate(mForDate);
-        mMeetingViewModel.getMeetings(mForDate);
+        mMeetingViewModel.getMeetingsFromViewModel(mForDate);
         mForDateView.setText(mForDate);
     }
 
     public void onClickNext(View view) {
         mForDate = DateConverter.nextDate(mForDate);
-        mMeetingViewModel.getMeetings(mForDate);
+        mMeetingViewModel.getMeetingsFromViewModel(mForDate);
         mForDateView.setText(mForDate);
     }
 
@@ -94,14 +95,15 @@ public class MeetingActivity extends AppCompatActivity {
 
     public void onClickScheduleMeeting(View view) {
         Intent intent = new Intent(this, ScheduleMeetingActivity.class);
+        intent.putExtra(KEY_MEETING_FOR_DATE, mForDate);
         startActivityForResult(intent, REQUEST_CODE_SCHEDULE_MEETING_ACTIVITY);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SCHEDULE_MEETING_ACTIVITY && resultCode == RESULT_OK) {
-            mMeetingViewModel.getMeetings(mForDate);
+        if (requestCode == REQUEST_CODE_SCHEDULE_MEETING_ACTIVITY && resultCode == RESULT_MEETING_ADDED) {
+            mMeetingViewModel.getMeetingFromRepository(mForDate);
         }
     }
 }

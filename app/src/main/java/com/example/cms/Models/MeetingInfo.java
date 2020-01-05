@@ -6,15 +6,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.RoomWarnings;
 
 @Entity(tableName = "meetingInfo")
 public class MeetingInfo {
 
     @PrimaryKey(autoGenerate = true)
+    @NonNull
     private int id;
     @SerializedName("start_time")
     @ColumnInfo(name = "startTime")
